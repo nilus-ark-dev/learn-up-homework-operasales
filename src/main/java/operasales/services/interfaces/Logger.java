@@ -1,4 +1,4 @@
-package operasales.services;
+package operasales.services.interfaces;
 
 public interface Logger {
 

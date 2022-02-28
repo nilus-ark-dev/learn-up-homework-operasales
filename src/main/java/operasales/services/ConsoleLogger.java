@@ -1,5 +1,6 @@
 package operasales.services;
 
+import operasales.services.interfaces.Logger;
 import org.springframework.stereotype.Component;
 
 @Component

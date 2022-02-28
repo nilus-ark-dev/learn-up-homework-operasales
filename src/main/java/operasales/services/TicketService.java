@@ -1,5 +1,6 @@
 package operasales.services;
 
+import operasales.annotations.Notifiable;
 import operasales.events.Premiere;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class TicketService {
         this.premiereService = premiereService;
     }
 
+    @Notifiable
     public void buyTicket(String title) {
         if (premiereService.premiereHashMap.containsKey(title)) {
             Premiere premiere = premiereService.premiereHashMap.get(title);
