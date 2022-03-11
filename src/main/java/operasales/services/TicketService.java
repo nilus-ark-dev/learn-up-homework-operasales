@@ -11,16 +11,17 @@ public class TicketService {
 
     private final ConsoleLogger logger;
 
-    @Autowired
-    private final PremiereService premiereService;
+    //@Autowired
+    private final PremiereServiceImpl premiereService;
 
     @Autowired
-    public TicketService(ConsoleLogger logger, PremiereService premiereService) {
+    public TicketService(ConsoleLogger logger, PremiereServiceImpl premiereService) {
         this.logger = logger;
         this.premiereService = premiereService;
     }
 
-    @Notifiable
+    /*
+    //@Notifiable
     public void buyTicket(String title) {
         if (premiereService.premiereHashMap.containsKey(title)) {
             Premiere premiere = premiereService.premiereHashMap.get(title);
@@ -46,4 +47,5 @@ public class TicketService {
             logger.log("Введите корректное название премьеры!\n");
         }
     }
+    */
 }
