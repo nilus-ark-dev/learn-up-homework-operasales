@@ -1,20 +1,35 @@
 package operasales.events;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+
+import javax.persistence.*;
 import java.lang.String;
 
+@Data
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
+@Table(name = "premieres")
 public class Premiere {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String title;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "ageCategory")
     private int ageCategory;
+
+    @Column(name = "seatsLimit")
     private int seatsLimit;
+
+    @Column(name = "tickets")
     private int tickets;
 
     @Override

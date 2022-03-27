@@ -35,13 +35,13 @@ public class PremiereServiceImpl implements PremiereService {
 
     @Override
     public void showPremiere(String title) {
-        logger.log(premiereRepository.get(title));
+        logger.log(premiereRepository.findById(title));
     }
 
     @Override
     public void showAllPremieres() {
         logger.log("Афиша премьер:\n");
-        for (Premiere premiere : premiereRepository.getAll()) {
+        for (Premiere premiere : premiereRepository.findAll()) {
             logger.log(premiere.getTitle());
         }
     }

@@ -5,27 +5,27 @@ import operasales.repository.interfaces.PremiereRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+/*
+@Repository
+@Profile("jdbc-named")
+public class NPJdbcTemplatePremiereRepository implements PremiereRepository {
 
-/*@Repository
-@Profile("jdbc")
-public class JdbcTemplatePremiereRepository implements PremiereRepository {
-
-    private final JdbcTemplate jdbc;
+    private final NamedParameterJdbcTemplate jdbc;
 
     @Autowired
-    public JdbcTemplatePremiereRepository(JdbcTemplate jdbc) {
+    public NPJdbcTemplatePremiereRepository(NamedParameterJdbcTemplate jdbc) {
         this.jdbc = jdbc;
     }
 
     @Override
     public List<Premiere> getAll() {
         final String sql = "SELECT * FROM premieres;";
-        final SqlRowSet sqlRowSet = jdbc.queryForRowSet(sql);
+        final SqlRowSet sqlRowSet = jdbc.queryForRowSet(sql, Collections.emptyMap());
 
         List<Premiere> result = new ArrayList<>();
         while (sqlRowSet.next()) {
@@ -36,8 +36,8 @@ public class JdbcTemplatePremiereRepository implements PremiereRepository {
 
     @Override
     public Premiere get(String title) {
-        final String sql = "SELECT * FROM premieres WHERE title = ?;";
-        final SqlRowSet sqlRowSet = jdbc.queryForRowSet(sql, title);
+        final String sql = "SELECT * FROM premieres WHERE title = :title;";
+        final SqlRowSet sqlRowSet = jdbc.queryForRowSet(sql, Collections.singletonMap("title", title));
 
         sqlRowSet.next();
         return parse(sqlRowSet);
@@ -51,15 +51,20 @@ public class JdbcTemplatePremiereRepository implements PremiereRepository {
                 "age_category, " +
                 "seats_limit, " +
                 "tickets" +
-        ") VALUES(?, ?, ?, ?, ?);";
-        final int updatedRows = jdbc.update(
-                sql,
-                premiere.getTitle(),
-                premiere.getDescription(),
-                premiere.getAgeCategory(),
-                premiere.getSeatsLimit(),
-                premiere.getTickets()
-        );
+        ") VALUES(" +
+                ":title, " +
+                ":description, " +
+                ":age_category, " +
+                ":seats_limit, " +
+                ":tickets);";
+        Map<String, Object> params = new HashMap<String, Object>(){{
+            put("title", premiere.getTitle());
+            put("description", premiere.getDescription());
+            put("age_category", premiere.getAgeCategory());
+            put("seats_limit", premiere.getSeatsLimit());
+            put("tickets", premiere.getTickets());
+        }};
+        final int updatedRows = jdbc.update(sql, params);
         return updatedRows == 1;
     }
 
