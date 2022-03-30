@@ -32,6 +32,9 @@ public class Premiere {
     @Column(name = "tickets")
     private int tickets;
 
+    @Column(name = "id", length = 12)
+    private int id;
+
     @Override
     public String toString() {
         return "Название: " +
