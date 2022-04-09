@@ -2,6 +2,8 @@ package operasales.services.interfaces;
 
 import operasales.events.Premiere;
 
+import java.util.Collection;
+
 public interface PremiereService {
 
     void addPremiere(String title, String description, int ageCategory, int seatsLimit, int tickets, int id);
@@ -19,4 +21,6 @@ public interface PremiereService {
     void showAllPremieres();
 
     void deletePremiere();
+
+    Collection<Premiere> getAll();
 }

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.lang.String;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -92,5 +93,10 @@ public class PremiereServiceImpl implements PremiereService {
     @Override
     public void deletePremiere() {
         //
+    }
+
+    @Override
+    public Collection<Premiere> getAll() {
+        return premiereRepository.findAll();
     }
 }
