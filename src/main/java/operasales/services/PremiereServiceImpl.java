@@ -1,20 +1,14 @@
 package operasales.services;
 
-import operasales.events.Premiere;
-//import operasales.repository.JdbcTemplatePremiereRepository;
+import operasales.domain.PremiereMain;
 import operasales.repository.interfaces.PremiereRepository;
 import operasales.services.interfaces.PremiereService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.EOFException;
-import java.io.FileNotFoundException;
 import java.lang.String;
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PremiereServiceImpl implements PremiereService {
@@ -22,81 +16,49 @@ public class PremiereServiceImpl implements PremiereService {
     private ConsoleLogger logger;
 
     private PremiereRepository premiereRepository;
+    private Mapper mapper;
 
     @Autowired
-    public PremiereServiceImpl(ConsoleLogger logger, PremiereRepository premiereRepository) {
+    public PremiereServiceImpl(ConsoleLogger logger, PremiereRepository premiereRepository, Mapper mapper) {
         this.logger = logger;
         this.premiereRepository = premiereRepository;
+        this.mapper = mapper;
     }
 
     @Override
-    public void addPremiere(String title, String description, int ageCategory, int seatsLimit, int tickets, int id) {
-        Premiere premiere = new Premiere(title, description, ageCategory, seatsLimit, tickets, id);
-        premiereRepository.save(premiere);
+    public Collection<PremiereMain> getAll() {
+        return premiereRepository.findAll().stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional(
-            propagation = Propagation.REQUIRED,
-            isolation = Isolation.DEFAULT,
-            timeout = 3,
-            rollbackFor = {
-                    EOFException.class
-            },
-            noRollbackFor = {
-                    FileNotFoundException.class,
-                    NullPointerException.class
-            }
-    )
-    public void updateAllId(int targetId) {
-        logger.log("Начало транзакции...");
-        final List<Premiere> premieres = premiereRepository.findAll();
-        for (Premiere premiere : premieres) {
-            //premiere.setId(Integer.parseInt(targetId));
-            premiereRepository.updateId(targetId, premiere.getTitle());
-        }
-        logger.log("Транзакция завершена!");
-    }
-
-
-    @Override
-    public void editPremiere(String title, Premiere premiere) {
-        //
+    public PremiereMain getPremiere(int id) {
+        return mapper.toDomain(
+                premiereRepository.getById(String.valueOf(id)));
     }
 
     @Override
-    public void printCount() {
-        logger.log(
-                "Всего премьер: " + premiereRepository.countAllPremieres());
+    public PremiereMain get(String title) {
+        return mapper.toDomain(
+                premiereRepository.get(title));
     }
 
     @Override
-    public void printAllPremieresByPattern(String pattern) {
-        for (Premiere premiere : premiereRepository.getAllPremieresWhichHasPattern(pattern)) {
-            logger.log(premiere);
-        }
+    public boolean addPremiere(PremiereMain premiereMain) {
+        premiereRepository.save(mapper.toEvent(premiereMain));
+        return true;
     }
 
     @Override
-    public void showPremiere(String title) {
-        logger.log(premiereRepository.findById(title).get());
+    public PremiereMain updatePremiere(PremiereMain premiereMain) {
+        return mapper.toDomain(
+                premiereRepository.save(
+                        mapper.toEvent(premiereMain)));
     }
 
     @Override
-    public void showAllPremieres() {
-        logger.log("Афиша премьер:");
-        for (Premiere premiere : premiereRepository.findAll()) {
-            logger.log(premiere.getTitle());
-        }
-    }
-
-    @Override
-    public void deletePremiere() {
-        //
-    }
-
-    @Override
-    public Collection<Premiere> getAll() {
-        return premiereRepository.findAll();
+    public void deletePremiere(int id) {
+        premiereRepository.delete(id);
     }
 }

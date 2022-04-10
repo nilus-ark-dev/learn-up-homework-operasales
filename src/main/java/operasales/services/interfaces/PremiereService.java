@@ -1,26 +1,21 @@
 package operasales.services.interfaces;
 
-import operasales.events.Premiere;
+import operasales.domain.PremiereMain;
 
 import java.util.Collection;
 
 public interface PremiereService {
 
-    void addPremiere(String title, String description, int ageCategory, int seatsLimit, int tickets, int id);
+    Collection<PremiereMain> getAll();
 
-    void updateAllId(int targetId);
+    PremiereMain getPremiere(int id);
 
-    void editPremiere(String title, Premiere premiere);
 
-    void printCount();
+    PremiereMain get(String title);
 
-    void printAllPremieresByPattern(String pattern);
+    boolean addPremiere(PremiereMain premiereMain);
 
-    void showPremiere(String title);
+    PremiereMain updatePremiere(PremiereMain premiereMain);
 
-    void showAllPremieres();
-
-    void deletePremiere();
-
-    Collection<Premiere> getAll();
+    void deletePremiere(int id);
 }

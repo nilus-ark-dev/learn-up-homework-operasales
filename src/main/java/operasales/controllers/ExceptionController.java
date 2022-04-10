@@ -1,14 +1,21 @@
-/*package operasales.controllers;
+package operasales.controllers;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import operasales.dto.ErrorDto;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.postgresql.util.PSQLException;
+import java.util.Random;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @ControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler({PSQLException.class})
-    public String error(Exception err) {
-        return "error";
+    @ExceptionHandler(Exception.class)
+    public ErrorDto handle(Exception err) {
+        Random rand = new Random();
+        rand.nextInt(100);
+        return new ErrorDto(rand.nextInt(100), err.getMessage());
     }
-}*/
+}

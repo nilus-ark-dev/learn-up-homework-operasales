@@ -1,4 +1,4 @@
-package operasales.repository;
+/*package operasales.repository;
 
 import operasales.events.Premiere;
 import operasales.repository.interfaces.PremiereRepository;
@@ -9,12 +9,9 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Repository
 @Profile("jdbc")
-public class JdbcTemplatePremiereRepository /*implements PremiereRepository*/ {
+public class JdbcTemplatePremiereRepository implements PremiereRepository {
 
     private final JdbcTemplate jdbc;
     private TransactionTemplate txTemplate;
@@ -25,7 +22,7 @@ public class JdbcTemplatePremiereRepository /*implements PremiereRepository*/ {
         this.txTemplate = txTemplate;
     }
 
-    //@Override
+    @Override
     public List<Premiere> getAll() {
         final String sql = "SELECT * FROM premieres;";
         final SqlRowSet sqlRowSet = jdbc.queryForRowSet(sql);
@@ -47,7 +44,7 @@ public class JdbcTemplatePremiereRepository /*implements PremiereRepository*/ {
     }
 
     //@Override
-    /*public boolean save(Premiere premiere) {
+    public boolean save(Premiere premiere) {
         final String sql = "INSERT INTO premieres (" +
                 "title, " +
                 "description, " +
@@ -64,11 +61,12 @@ public class JdbcTemplatePremiereRepository /*implements PremiereRepository*/ {
                 premiere.getTickets()
         );
         return updatedRows == 1;
-    }*/
+    }
 
     public boolean updateId(Premiere premiere) {
         final String sql = "UPDATE premieres SET id = ? WHERE title = ?;";
         final int updatedRows =
+                //jdbc.update(sql, premiere.getId(), premiere.getTitle());
                 jdbc.update(sql, premiere.getId(), premiere.getTitle());
         return updatedRows == 1;
     }
@@ -82,4 +80,4 @@ public class JdbcTemplatePremiereRepository /*implements PremiereRepository*/ {
         final int id = result.getInt("id");
         return new Premiere(title, description, age_category, seats_limit, tickets, id);
     }
-}
+}*/
