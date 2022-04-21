@@ -2,7 +2,6 @@ package operasales.events;
 
 import lombok.*;
 
-
 import javax.persistence.*;
 import java.lang.String;
 
@@ -23,10 +22,10 @@ public class Premiere {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "ageCategory")
+    @Column(name = "age_category")
     private int ageCategory;
 
-    @Column(name = "seatsLimit")
+    @Column(name = "seats_limit")
     private int seatsLimit;
 
     @Column(name = "tickets")

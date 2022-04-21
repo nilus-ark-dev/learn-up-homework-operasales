@@ -19,9 +19,8 @@ public interface PremiereRepository extends JpaRepository<Premiere, String> {
     @Query("update Premiere p set p.id = :id where p.title = :title")
     void updateId(int id, String title);
 
-
     @Query("from Premiere p where p.title = :title")
-    Premiere get(String title);
+    Premiere getPremiere(String title);
 
     @Query("from Premiere p where p.id = :id")
     void delete(int id);

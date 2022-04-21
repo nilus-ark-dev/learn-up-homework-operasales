@@ -1,17 +1,16 @@
-/*package operasales.services;
+package operasales.services;
 
-import operasales.annotations.Notifiable;
-import operasales.events.Premiere;
+import operasales.domain.PremiereMain;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-*/
-/*
+
+
 @Service
 public class TicketService {
 
     private final ConsoleLogger logger;
 
-    //@Autowired
     private final PremiereServiceImpl premiereService;
 
     @Autowired
@@ -20,13 +19,13 @@ public class TicketService {
         this.premiereService = premiereService;
     }
 
-    //@Notifiable
+    @PreAuthorize("hasRole(\"USER\")")
     public void buyTicket(String title) {
-        if (premiereService.premiereHashMap.containsKey(title)) {
-            Premiere premiere = premiereService.premiereHashMap.get(title);
+        if (premiereService.premiereMainCollection.containsKey(title)) {
+            PremiereMain premiere = premiereService.premiereMainCollection.get(title);
             if (premiere.getTickets() > 0) {
                 premiere.setTickets(premiere.getTickets() - 1);
-                premiereService.premiereHashMap.put(title, premiere);
+                premiereService.premiereMainCollection.put(title, premiere);
                 logger.log("Куплен билет на премьеру " + title  + " (осталось " + premiere.getTickets() + ")\n");
             } else {
                 logger.log("Билеты закончились\n");
@@ -36,15 +35,15 @@ public class TicketService {
         }
     }
 
+    @PreAuthorize("hasRole(\"USER\")")
     public void returnTicket(String title) {
-        if (premiereService.premiereHashMap.containsKey(title)) {
-            Premiere premiere = premiereService.premiereHashMap.get(title);
+        if (premiereService.premiereMainCollection.containsKey(title)) {
+            PremiereMain premiere = premiereService.premiereMainCollection.get(title);
             premiere.setTickets(premiere.getTickets() + 1);
-            premiereService.premiereHashMap.put(title, premiere);
+            premiereService.premiereMainCollection.put(title, premiere);
             logger.log("Билет на премьеру " + title + " сдан" + " (осталось " + premiere.getTickets() + ")\n");
         } else {
             logger.log("Введите корректное название премьеры!\n");
         }
     }
-
-}*/
+}

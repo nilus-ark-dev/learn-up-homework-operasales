@@ -4,10 +4,11 @@ import operasales.domain.PremiereMain;
 import operasales.repository.interfaces.PremiereRepository;
 import operasales.services.interfaces.PremiereService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.lang.String;
-import java.util.Collection;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +26,17 @@ public class PremiereServiceImpl implements PremiereService {
         this.mapper = mapper;
     }
 
+    public Map<String, PremiereMain> premiereMainCollection;
+
+    @PreAuthorize("hasRole(\"USER\")")
+    @Override
+    public PremiereMain getPremiere(String title) {
+        return mapper.toDomain(
+                premiereRepository.getById(title));
+    }
+
+
+    @PreAuthorize("hasAnyRole(\"USER\", \"GUEST\")")
     @Override
     public Collection<PremiereMain> getAll() {
         return premiereRepository.findAll().stream()
@@ -32,24 +44,14 @@ public class PremiereServiceImpl implements PremiereService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public PremiereMain getPremiere(int id) {
-        return mapper.toDomain(
-                premiereRepository.getById(String.valueOf(id)));
-    }
-
-    @Override
-    public PremiereMain get(String title) {
-        return mapper.toDomain(
-                premiereRepository.get(title));
-    }
-
+    @PreAuthorize("hasRole(\"ADMIN\")")
     @Override
     public boolean addPremiere(PremiereMain premiereMain) {
         premiereRepository.save(mapper.toEvent(premiereMain));
         return true;
     }
 
+    @PreAuthorize("hasRole(\"ADMIN\")")
     @Override
     public PremiereMain updatePremiere(PremiereMain premiereMain) {
         return mapper.toDomain(
@@ -57,6 +59,7 @@ public class PremiereServiceImpl implements PremiereService {
                         mapper.toEvent(premiereMain)));
     }
 
+    @PreAuthorize("hasRole(\"ADMIN\")")
     @Override
     public void deletePremiere(int id) {
         premiereRepository.delete(id);

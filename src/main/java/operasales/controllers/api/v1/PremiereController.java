@@ -1,4 +1,4 @@
-package operasales.controllers;
+package operasales.controllers.api.v1;
 
 import operasales.dto.PremiereDto;
 import operasales.services.Mapper;
@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/premieres")
+@RequestMapping("/api/v1/premieres")
 public class PremiereController {
 
     private PremiereService premiereService;
@@ -29,9 +29,9 @@ public class PremiereController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
-    public PremiereDto getPremiere(@PathVariable("id") int id)  {
-        return mapper.toDto(premiereService.getPremiere(id));
+    @GetMapping("/{title}")
+    public PremiereDto getPremiere(@PathVariable("title") String title)  {
+        return mapper.toDto(premiereService.getPremiere(title));
     }
 
     @PostMapping
@@ -41,7 +41,7 @@ public class PremiereController {
     }
 
     @PutMapping("/{id}")
-    public void updatePremiere(@RequestBody PremiereDto premiereDto, @PathVariable("id") String id) {
+    public void updatePremiere(@RequestBody PremiereDto premiereDto, @PathVariable("id") int id) {
         premiereService.updatePremiere(
                 mapper.toDomain(premiereDto));
     }

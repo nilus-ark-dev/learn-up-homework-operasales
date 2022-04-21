@@ -8,10 +8,7 @@ public interface PremiereService {
 
     Collection<PremiereMain> getAll();
 
-    PremiereMain getPremiere(int id);
-
-
-    PremiereMain get(String title);
+    PremiereMain getPremiere(String title);
 
     boolean addPremiere(PremiereMain premiereMain);
 
